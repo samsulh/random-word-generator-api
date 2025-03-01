@@ -40,15 +40,24 @@ app.get("/api/random-word", async (req, res) => {
       .json({ error: "No word found with the given criteria" });
   }
 
+  console.log(`Generated word: ${word}`); // Debug log
+
   try {
     const response = await axios.get(
       `https://api.dictionaryapi.dev/api/v2/entries/en/${word}`
     );
+
+    console.log("API Response:", response.data); // Debug log
+
     const definition =
       response.data[0]?.meanings[0]?.definitions[0]?.definition ||
       "Definition not found.";
     res.json({ word, definition });
   } catch (error) {
+    console.error(
+      "Dictionary API Error:",
+      error.response?.data || error.message
+    );
     res.json({ word, definition: "Definition not available." });
   }
 });
